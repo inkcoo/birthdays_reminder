@@ -1,0 +1,33 @@
+name: Birthday Reminder
+
+on:
+  schedule:
+    - cron: '05 22 * * *'  # 每天运行任务 (UTC 时间)，北京时间往后推八个小时
+  workflow_dispatch:  # 添加手动触发事件
+
+jobs:
+  send_birthday_reminder:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        pip install lunardate
+        pip install pytz
+
+
+    - name: Run birthday reminder script
+      env:  # 从 GitHub Secrets 中读取密钥
+        SMTP_USER: ${{ secrets.SMTP_USER }}
+        SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+      run: |
+       python birthday_reminder.py
