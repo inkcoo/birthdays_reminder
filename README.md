@@ -1,26 +1,40 @@
-# birthdays_reminder
 
-免费的成员生日邮件提醒。适应于行政部门，社团，好友。它可以通过读取生日列表(支持公历(阳历)和农历(阴历)生日)，在生日当天自动发送邮件给自己，方便我们给成员的生日祝福。作者INKCOO(ixiaocang/Hitori/小东/修兮求索/radish)
+# birthdays_reminder 🎂
 
-## 项目简介
+> 一个免费的成员生日邮件提醒工具，适用于行政部门、社团和好友群体。它能够读取生日列表（支持公历和农历），在生日当天自动发送邮件提醒，方便我们为成员送上生日祝福。作者：INKCOO(ixiaocang/Hitori/小东/修兮求索/radish)
+
+## 目录 📚
+
+- [项目简介](#项目简介-ℹ️)
+- [功能特点](#功能特点-✨)
+- [使用方法](#使用方法)
+- [许可证](#许可证-📄)
+- [更新日志](#更新日志-📅)2025.8.4/最新
+
+## 项目简介 ℹ️
+
 这是一个用于生日提醒的 Python 程序，它可以通过读取生日列表，在生日当天自动发送邮件给自己，方便我们给成员的生日祝福。支持公历(阳历)和农历(阴历)生日提醒，适用于使用 QQ 邮箱发送邮件。生日提醒邮件不仅会发送给自己，还会发送一份提醒邮件给负责管理员。项目为我想记得给校心助会成员生日祝福初衷设计。
 
-作者INKCOO(ixiaocang/Hitori/小东/修兮求索/radish)目前是本科日专生，计算机超级菜鸟一个，利用和询问AI创建的程序,2024.10.12花了一个上午创建，有问题或建议请邮ixiaocang@foxmail.com。请轻喷
+作者 INKCOO (ixiaocang/Hitori/小东/修兮求索/radish) 目前是一名日语专业的本科生，在计算机领域还在学习中，计算机超级菜鸟一个。这个程序是在 2024 年 10 月 12 日利用 AI 辅助创建的。如果您有任何问题或建议，请发送邮件至 ixiaocang@foxmail.com，欢迎提出宝贵意见。
 
-## 功能
+## 功能特点 ✨
 
-- **生日提醒**：支持公历和农历生日提醒，自动判断当天生日。
+- **生日提醒**：支持公历(阳历)和农历(阴历)（含闰月）生日提醒，自动判断当天生日。
 - **邮件发送**：在生日当天自动发送提醒邮件给自己和管理员。
 - **日志记录**：记录程序启动、结束时间及运行时长。
 - **可配置性**：通过环境变量配置邮箱账号、密码和管理员邮箱，确保信息安全。
 
-## 使用方法
+## 使用方法 🛠️
 
-### 1. 克隆到自己的仓库
+### [一、GitHub免费Fork使用](#1-克隆到自己的仓库-📦)
+### [二、服务器部署](#61-部署到本地服务器-🖥️)
 
-在 GitHub 上克隆项目，完成初始设置。
+### 一、GitHub免费Fork使用
+ #1. 克隆到自己的仓库 📦
 
-### 2. 配置生日列表
+在 GitHub 上fork项目，完成初始设置。可设置为隐私仓库，避免被人查看你的生日列表。
+
+### 2. 配置生日列表 📝
 
 在项目根目录的 `birthdays.txt` 文件中，按照如下格式一行一个添加成员的生日信息：
 
@@ -33,13 +47,13 @@
 - **a** 代表公历
 - **b** 代表农历
 
-### 3. 配置邮件客户端
+### 3. 配置邮件客户端 📧
 
 1. 登录你的 QQ 邮箱。
 2. 点击右上角的 “设置” 图标，选择 “账户” 选项。
 3. 找到 **SMTP 服务** 部分，点击开启，并生成授权码。这段授权码将作为 **SMTP_PASSWORD** 用于程序中。
 
-### 4. 设置 GitHub 仓库 Secrets
+### 4. 设置 GitHub 仓库 Secrets 🔐
 
 1. 打开项目仓库的 **Settings** 页面。
 2. 进入 **Secrets and variables > Actions** 部分，点击 **New repository secret**。
@@ -48,7 +62,7 @@
    - **SMTP_PASSWORD**：生成的授权码。
    - **ADMIN_EMAIL**：管理员邮箱，抄送生日提醒给管理员。
 
-### 5. 修改 GitHub Actions 工作流运行时间
+### 5. 修改 GitHub Actions 工作流运行时间 ⏱️
 
 项目默认会每天北京时间上午 6:05 运行且不受时区影响，如需修改，打开 `.github/workflows/birthday_reminder.yml` 文件，调整 `cron` 配置即可：
 
@@ -56,13 +70,24 @@
 - cron: '15 22 * * *'  # 北京时间早上6点15（22+8为次日六点）
 - cron: '0 22 * * *'   # 北京时间早上6点
 ```
-### 到此你的项目就差不多配置好了，最后需要在Action 的Birthday Reminder工作流中启用工作流，手动运行测试一下，之后便可自动运行
+### 到此你的项目就差不多配置好了，最后需要在仓库Action 的Birthday Reminder工作流中启用工作流，手动运行测试一下，之后便可自动运行
 
+### 5.1 工作流保活：避免60天仓库无提交导致工作流禁用 💪
+配置文件`birthdays_reminder\.github\workflows\keep_active.yml`
+
+1. 在仓库 `Settings > Actions > General` 页面
+2. 找到 "Workflow permissions" 部分
+3. 勾选 "Read and write permissions"
+4. 点击 Save 按钮
+5. 接着启用工作流
+6. 提交文件后，转到仓库的 "Actions" 标签页
+7. 找到 "Keep Repository Active" 工作流
+8. 点击 "Enable workflow"
 
 ---
 ***
 
-### *$$*6.1. 部署到本地服务器
+### 6.1 部署到本地服务器 🖥️
 
 如需部署到本地服务器，只需复制以下 Python 代码并保存为 `birthdays_reminder.py`，并安装依赖。
 
@@ -165,7 +190,7 @@ if __name__ == "__main__":
     main()
 ```
 
-### 6.2. 配置环境变量
+### 6.2 配置环境变量 ⚙️
 
 在同目录创建 `email.env` 文件，存储邮箱信息：
 
@@ -175,17 +200,23 @@ SMTP_PASSWORD=your_smtp_password
 ADMIN_EMAIL=your_admin_email@example.com
 ```
 以及创建`birthdays.txt`生日列表文件
-### 6.3. 安装依赖（python3）
+### 6.3 安装依赖（python3）📦
 
 ```bash
 pip3 install python-dotenv smtplib pytz lunardate
 ```
-### 6.4. 自动运行
-配置好后通过计划任务python3 birthdays_reminder.py运行就好了
+### 6.4 自动运行 ⏰
+配置好后通过计划任务`python3 birthdays_reminder.py`运行就好了
 
-## 7 许可证
+## 许可证 📄
 
-本项目采用 **[CC BY-NC-ND 4.0](https://creativecommons.org/licenses/by-nc-nd/4.0/)** 进行许可。你可以查看和使用代码用于非商业用途，但不允许修改或派生。如需商业许可，请联系作者ixiaocang@fomail.com。
+本项目采用 **[GPL3.0](https://www.gnu.org/licenses/gpl-3.0.en.html#license-text)** 进行许可。你可以免费使用、修改和分发本项目的代码，但必须遵守GPL3.0的许可证条款。如需商业许可，请联系作者ixiaocang@fomail.com。
+
+
+## 更新日志 📅
+
+**2025.8.4更新，新增了工作流保活的配置文件，避免60天仓库无提交导致工作流禁用，修复了github actions 控制台返回报错问题
+,修改介绍文档，修改许可证为GPL3.0**
 
 **2024.10.15晚更新，在邮件和后台窗口日志中添加成员生日是属于农历还是公历**
 

@@ -1,0 +1,62 @@
+name: Keep Repository Active
+# 工作流描述：定期创建空提交保持仓库活跃，避免长时间不活跃导致计划工作流被禁用
+
+on:
+  schedule:
+    # 每30天在UTC时间00:00运行（每月1号）
+    # */2 表示每2个月，即60天运行1次
+    # 调整为：使用 '0 0 1 * *' 表示每月1号运行，更符合需求
+    - cron: '0 0 1 * *'
+  
+  # 允许手动触发（调试用）
+  workflow_dispatch:
+
+permissions:
+  contents: write  # 必须的写入权限
+
+jobs:
+  commit-empty:
+    runs-on: ubuntu-latest
+    # 设置超时减少资源占用
+    timeout-minutes: 3
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 使用 GitHub 自动生成 token 获取仓库权限
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+          # 仅获取最新提交历史（降低资源消耗）
+          fetch-depth: 1
+          
+          # 确保使用正确的 ref
+          ref: ${{ github.head_ref || github.ref }}
+
+      - name: Configure Git
+        run: |
+          # 配置 Git 身份信息（使用 GitHub Actions 默认身份）
+          git config user.name "GitHub Actions Bot"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # 设置推送策略（避免因历史差异导致问题）
+          git config --local push.default current
+
+      - name: Verify previous commit
+        id: verify_commit
+        run: |
+          # 检查最新提交是否已经是空提交
+          if git log -1 --pretty=%B | grep -q "🤖 保持仓库工作流运行"; then
+            echo "SKIP_COMMIT=true" >> $GITHUB_OUTPUT
+          else
+            echo "SKIP_COMMIT=false" >> $GITHUB_OUTPUT
+          fi
+        shell: bash
+
+      - name: Create empty commit
+        # 仅在没有空提交时执行
+        if: ${{ steps.verify_commit.outputs.SKIP_COMMIT == 'false' }}
+        run: |
+          # 创建空提交并推送到当前分支
+          git commit --allow-empty -m "🤖 保持仓库工作流运行(空白提交)"
+          git push
