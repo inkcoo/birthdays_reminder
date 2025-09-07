@@ -1,21 +1,28 @@
 
 # birthdays_reminder 🎂
 
-> 一个免费的成员生日邮件提醒工具，适用于行政部门、社团和好友群体。它能够读取生日列表（支持公历和农历），在生日当天自动发送邮件提醒，方便我们为成员送上生日祝福。作者：INKCOO(ixiaocang/Hitori/小东/修兮求索/radish)
+> 这是一个基于Python开发的自动化生日提醒系统，专为记住重要日子而设计。系统通过读取生日列表文件，在对应的生日当天自动给你和负责管理员发送邮件提醒，确保你永远不会错过给亲朋好友、同事或团队成员送上生日祝福的机会。
+作者：INKCOO(ixiaocang/Hitori/小东/修兮求索/radish)
 
 ## 目录 📚
 
-- [项目简介](#项目简介-ℹ️)
-- [功能特点](#功能特点-✨)
-- [使用方法](#使用方法)
-- [许可证](#许可证-📄)
-- [更新日志](#更新日志-📅)2025.8.4/最新
+- [ℹ️项目简介](#项目简介-ℹ️)
+- [✨功能特点](#功能特点-✨)
+- [🛠️使用方法](#使用方法-🛠️)
+- [📄许可证](#许可证-📄)
+- [📅更新日志](#更新日志-📅) - 最新更新于 2025.9.7（⭐请确保 fork 了最新仓库）
+
 
 ## 项目简介 ℹ️
 
-这是一个用于生日提醒的 Python 程序，它可以通过读取生日列表，在生日当天自动发送邮件给自己，方便我们给成员的生日祝福。支持公历(阳历)和农历(阴历)生日提醒，适用于使用 QQ 邮箱发送邮件。生日提醒邮件不仅会发送给自己，还会发送一份提醒邮件给负责管理员。项目为我想记得给校心助会成员生日祝福初衷设计。
+这是一个用于生日提醒的 Python 程序，它可以通过读取生日列表，在生日当天自动发送邮件给自己，方便我们给成员的生日祝福。支持公历(阳历)和农历(阴历)生日提醒，适用于使用 QQ 邮箱发送邮件。生日提醒邮件不仅会发送给自己，还会发送一份提醒邮件给负责管理员。项目初衷为我想提醒自己给校心助会成员送生日祝福而设计。
 
 作者 INKCOO (ixiaocang/Hitori/小东/修兮求索/radish) 目前是一名日语专业的本科生，在计算机领域还在学习中，计算机超级菜鸟一个。这个程序是在 2024 年 10 月 12 日利用 AI 辅助创建的。如果您有任何问题或建议，请发送邮件至 ixiaocang@foxmail.com，欢迎提出宝贵意见。
+**适用场景：**
+- 🏢 企业行政部门管理员工生日
+- 🎓 学校社团管理成员生日
+- 👥 朋友圈生日提醒
+- 💼 团队管理者关怀成员
 
 ## 功能特点 ✨
 
@@ -23,11 +30,13 @@
 - **邮件发送**：在生日当天自动发送提醒邮件给自己和管理员。
 - **日志记录**：记录程序启动、结束时间及运行时长。
 - **可配置性**：通过环境变量配置邮箱账号、密码和管理员邮箱，确保信息安全。
+- **年龄显示**：支持显示成员年龄（可选，需要在生日列表中包含年份）。
+- **部门显示**：支持显示成员所属部门（可选，需要在生日列表中包含部门信息）。
 
 ## 使用方法 🛠️
 
-### [一、GitHub免费Fork使用](#1-克隆到自己的仓库-📦)
-### [二、服务器部署](#61-部署到本地服务器-🖥️)
+### [一、GitHub免费Fork使用](#一github免费fork使用-)
+### [二、服务器部署](#61-本地-服务器快速部署-)
 
 ### 一、GitHub免费Fork使用
  #1. 克隆到自己的仓库 📦
@@ -39,13 +48,23 @@
 在项目根目录的 `birthdays.txt` 文件中，按照如下格式一行一个添加成员的生日信息：
 
 ```txt
-姓名-月-日-公历或农历类型
-张三-10-12-a
+# 支持四种格式:
+# 1. 姓名-年-月-日-类型 (带年份不带部门)
+# 2. 姓名-月-日-类型 (不带年份不带部门)
+# 3. 姓名-月-日-类型-部门 (不带年份带部门)
+# 4. 姓名-年-月-日-类型-部门 (带年份带部门)
+
+# 示例：
+张三-1990-10-12-a
 李四-08-15-b
+王五-1985-05-20-a-技术部
+赵六-12-25-b-市场部
 ```
 
 - **a** 代表公历
 - **b** 代表农历
+- 如果包含年份，将显示年龄
+- 如果包含部门，将显示部门信息
 
 ### 3. 配置邮件客户端 📧
 
@@ -60,11 +79,11 @@
 3. 添加以下三个 Secret：
    - **SMTP_USER**：你的 QQ 邮箱。
    - **SMTP_PASSWORD**：生成的授权码。
-   - **ADMIN_EMAIL**：管理员邮箱，抄送生日提醒给管理员。
+   - **ADMIN_EMAIL**：管理员邮箱（可选），抄送生日提醒给管理员。
 
 ### 5. 修改 GitHub Actions 工作流运行时间 ⏱️
 
-项目默认会每天北京时间上午 6:05 运行且不受时区影响，如需修改，打开 `.github/workflows/birthday_reminder.yml` 文件，调整 `cron` 配置即可：
+项目默认会每天北京时间上午 6:05 运行且不受时区影响(但会受到github计划任务系统延迟，运行推迟约半个小时)，如需修改，打开 `.github/workflows/birthday_reminder.yml` 文件，调整 `cron` 配置即可：
 
 ```yaml
 - cron: '15 22 * * *'  # 北京时间早上6点15（22+8为次日六点）
@@ -87,126 +106,84 @@
 ---
 ***
 
-### 6.1 部署到本地服务器 🖥️
+### 6.1 本地 服务器快速部署 🚀
+如遇到问题，请先浏览[一、GitHub免费Fork使用](#一github免费fork使用)了解项目基本使用方法，或咨询AI助手。
 
-如需部署到本地服务器，只需复制以下 Python 代码并保存为 `birthdays_reminder.py`，并安装依赖。
+1. 下载文件 [birthday_reminder-local.py](https://raw.githubusercontent.com/inkcoo/birthdays_reminder/main/birthday_reminder-local.py) ：
+```bash
+# 创建项目目录
+mkdir birthday_reminder && cd birthday_reminder
 
-```python
-import smtplib
-from email.mime.text import MIMEText
-from datetime import datetime
-import lunardate
-import pytz
-from dotenv import load_dotenv
-import os
-
-load_dotenv('email.env')
-
-def read_birthdays(filename):
-    birthdays = []
-    with open(filename, 'r') as file:
-        for line in file:
-            parts = line.strip().split('-')
-            if len(parts) == 4:
-                name, month, day, calendar_type = parts
-                birthdays.append((name, f"{month}/{day}", calendar_type))
-            else:
-                print(f"跳过格式不正确的行: {line.strip()}")
-    return birthdays
-
-def get_lunar_date_in_beijing():
-    tz = pytz.timezone('Asia/Shanghai')
-    now = datetime.now(tz)
-    lunar_date = lunardate.LunarDate.fromSolarDate(now.year, now.month, now.day)
-    return lunar_date
-
-def is_birthday_today(date, calendar_type):
-    tz = pytz.timezone('Asia/Shanghai')
-    today = datetime.now(tz)
-
-    if calendar_type == 'a':
-        month, day = map(int, date.split('/'))
-        return today.month == month and today.day == day
-    elif calendar_type == 'b':
-        lunar_today = get_lunar_date_in_beijing()
-        month, day = map(int, date.split('/'))
-        return lunar_today.month == month and lunar_today.day == day
-    return False
-
-def send_email(subject, body, to_email):
-    smtp_server = "smtp.qq.com"
-    smtp_port = 465
-    smtp_user = os.getenv('SMTP_USER')
-    smtp_password = os.getenv('SMTP_PASSWORD')
-
-    msg = MIMEText(body)
-    msg['Subject'] = subject
-    msg['From'] = smtp_user
-    msg['To'] = to_email
-
-    with smtplib.SMTP_SSL(smtp_server, smtp_port) as server:
-        server.login(smtp_user, smtp_password)
-        server.sendmail(smtp_user, [to_email], msg.as_string())
-
-def main():
-    print("读取生日列表...")
-    birthdays = read_birthdays('birthdays.txt')
-    print("检查生日是否是今天...")
-
-    admin_email = os.getenv('ADMIN_EMAIL')
-
-    today_birthdays = []
-
-    for name, date, calendar_type in birthdays:
-        if is_birthday_today(date, calendar_type):
-            birthday_type = "(公历)" if calendar_type == 'a' else "(农历)"
-            today_birthdays.append((name, birthday_type))
-            print(f"今天是 {name} 的生日 {birthday_type}!")
-        else:
-            print(f"{name} 今天不是生日。")
-
-    tz = pytz.timezone('Asia/Shanghai')
-    now = datetime.now(tz)
-    formatted_time = now.strftime("%Y-%m-%d %H:%M:%S %Z")
-
-    if today_birthdays:
-        if len(today_birthdays) == 1:
-            name_with_type = f"{today_birthdays[0][0]} {today_birthdays[0][1]}"
-            subject = f"生日提醒: 今天是 {name_with_type} 的生日"
-            body = f"今天是 {name_with_type} 的生日，请记得祝福 TA！\n\n邮件发送时间: {formatted_time}"
-        else:
-            names_with_types = "、".join([f"{name} {birthday_type}" for name, birthday_type in today_birthdays])
-            subject = "生日提醒: 今天有多位成员的生日"
-            body = f"今天是 {names_with_types} 的生日，请记得祝福他们！\n\n邮件发送时间: {formatted_time}"
-
-        send_email(subject, body, os.getenv('SMTP_USER'))
-        print(f"生日提醒邮件已发送给成员，发送时间: {formatted_time}")
-
-        if admin_email:
-            send_email(subject, body, admin_email)
-            print(f"生日提醒邮件已发送给管理员 {admin_email}，发送时间: {formatted_time}")
-
-if __name__ == "__main__":
-    main()
+# 下载主程序（保存为 birthday_reminder.py）
+curl -o birthday_reminder.py https://raw.githubusercontent.com/inkcoo/birthdays_reminder/main/birthday_reminder-local.py
 ```
 
-### 6.2 配置环境变量 ⚙️
+2. 配置环境变量 ⚙️
 
-在同目录创建 `email.env` 文件，存储邮箱信息：
+同目录创建 `email.env` 文件：
 
 ```txt
-SMTP_USER=your_smtp_user@example.com
-SMTP_PASSWORD=your_smtp_password
-ADMIN_EMAIL=your_admin_email@example.com
+SMTP_USER=your_email@qq.com
+SMTP_PASSWORD=your_qq_auth_code
+ADMIN_EMAIL=admin@example.com
 ```
-以及创建`birthdays.txt`生日列表文件
-### 6.3 安装依赖（python3）📦
+
+3. 创建生日列表 📋
+
+同目录创建 `birthdays.txt` 文件：
+
+```txt
+张三-2000-01-15-a-技术部
+李四-1995-03-22-b-市场部
+王五-08-30-a-人事部
+赵六-12-05-b
+```
+
+4. 安装依赖 📦
 
 ```bash
-pip3 install python-dotenv smtplib pytz lunardate
+# 安装所需库
+pip3 install python-dotenv pytz lunardate
+
+# 验证安装
+python3 -c "import dotenv, pytz, lunardate; print('依赖安装成功')"
 ```
-### 6.4 自动运行 ⏰
-配置好后通过计划任务`python3 birthdays_reminder.py`运行就好了
+
+5. 测试运行 🧪
+
+```bash
+# 手动测试
+python3 birthday_reminder.py
+
+# 查看输出确认配置正确
+```
+
+6. 设置定时任务 ⏰
+
+为确保生日提醒系统能够每天自动运行，您需要设置一个定时任务（cron job）：
+
+```bash
+# 编辑 crontab
+crontab -e
+```
+
+在打开的编辑器中添加以下行来设置每天上午8点运行脚本：
+
+```bash
+# 每天上午8点运行生日提醒脚本
+0 8 * * * cd /path/to/birthday_reminder && python3 birthday_reminder.py
+```
+
+7. 日志输出（可选）📝
+
+如需保存运行日志以便调试和监控，可以将输出重定向到日志文件：
+
+```bash
+# 修改crontab添加日志输出
+0 8 * * * cd /path/to/birthday_reminder && python3 birthday_reminder.py >> birthday.log 2>&1
+```
+
+这样，所有的标准输出和错误信息都会被记录在 `birthday.log` 文件中。
 
 ## 许可证 📄
 
@@ -215,11 +192,25 @@ pip3 install python-dotenv smtplib pytz lunardate
 
 ## 更新日志 📅
 
-**2025.8.4更新，新增了工作流保活的配置文件，避免60天仓库无提交导致工作流禁用，修复了github actions 控制台返回报错问题
-,修改介绍文档，修改许可证为GPL3.0**
+- **2025.9.7**
+  - 新增部门显示功能和修复年龄计算功能
+  - 优化介绍文档索引链接点击异常问题
+  - 优化本地部署方案介绍
+  - 改进邮件格式为HTML，提升显示效果和多端兼容性
 
-**2024.10.15晚更新，在邮件和后台窗口日志中添加成员生日是属于农历还是公历**
+- **2025.9.4**
+  - 新增年龄判断和显示功能，重复行跳过
+- **2025.8.4**
+  - 新增了工作流保活的配置文件，避免60天仓库无提交导致工作流禁用
+  - 修复了github actions 控制台返回报错问题
+  - 修改介绍文档，优化显示效果
+  - 修改许可证为GPL3.0
 
-**2024.10.16早更新，修改的生日判断改为用北京时间判断，避免github运行的时区影响**
+- **2024.10.17**
+  - 修改农历时间及生日判断改为用北京时间判断，避免github运行的时区影响
 
-**2024.10.17早更新，修改的农历时间及生日判断改为用北京时间判断，避免github运行的时区影响**
+- **2024.10.16**
+  - 修改生日判断改为用北京时间判断，避免github运行的时区影响
+
+- **2024.10.15**
+  - 在邮件和后台窗口日志中添加成员生日是属于农历还是公历
